@@ -1,0 +1,8 @@
+https://liballeg.org/old.html
+
+dx9mgw.zip
+This file contains necessary DirectX files for compiling Allegro 5. Only for Windows.
+
+dx80_mgw.zip
+This file contains the minimal version of the DirectX 8 SDK for MinGW. Only for Windows.
+
