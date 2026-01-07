@@ -1,0 +1,150 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<title>Allegro.cc - The Allegro Guide: Configuring MSVC</title>
+</head>
+
+<body>
+
+<h1>The Allegro Guide</h1>
+
+<a href="getting_started.html">General</a> » Windows » MSVC » Using Allegro
+
+<h2>I. Creating a Project</h2>
+<p>
+Using Allegro with Microsoft Visual Studio is simple once you get the workspace
+configured. For most applications, you will want to use a "Win32 Application" and 
+link against the optimized library. While writing the code, however, you will
+probably want to use the debugging and profiling modes. We are assuming you already
+have Allegro already installed for MSVC.
+</p>
+
+<h3>A. Configuring a Win32 Application</h3>
+<p>
+If you want to create a game with graphics, then you need to create a 'Win32 Application'
+workspace. 
+</p>
+
+<ol>
+<li>Open Microsoft Visual Studio</li>
+<li>Click on File / New</li>
+<li>Choose Win32 Application</li>
+<li>Enter your Project Name and hit "OK"</li>
+<li>Select "An Empty Project" and press "Finish"</li>
+<li>Hit "OK" on the status window that pops up</li>
+</ol>
+
+<p>
+Your workspace has been set up, but now we need to link to the Allegro library. You 
+technically only need to set up the optimized or debugging version, but it's recommended
+to set up all three versions of Allegro - including the profiling. Remember that you
+must have already built all these versions of Allegro before you can use them! 
+</p>
+
+<ol>
+<li>Click on "Build" / "Configurations"</li>
+<li>Click the "Add..." button</li>
+<li>In the "Configuration" textbox, enter "Profile" and Click "OK"</li>
+<li>Click "Close"</li>
+</ol>
+
+<p>
+Now that we have all the configurations in place, we must set them up. We need to make the decision now if we
+want to statically link or dynamically link. Dymamically linking means that you must distribute the Allegro DLL
+along with your files. If you statically link, your executable will be much bigger (the size of the DLL), but you
+will not need to distribute the DLL. If you have more than one executable, you should probably link dynamically
+to save space. If you want to be able to do either, then you can repeat the steps 1-4 from above and add three more 
+configurations entitled "Static Release, "Static Profile", and "Static Debug".
+</p>
+
+<p>
+In short, you only need to do one or the other. If you are not sure, then linking dynamically is the safer
+option.
+</p>
+
+<h4>1. Dynamically Linking</h4>
+
+<ol>
+<li>Click on "Projects / Settings"</li>
+<li>Make sure that the project name (the first item) is selected on the ListView on the left hand side</li><br><br>
+<li>Select "Win32 Release" in the "Settings For" drop down</li>
+<li>Under the "Code Generation" in the "C/C++" tab, choose "Multithreaded DLL"</li>
+<li>Under the "Object/library modules" in the "Link" tab, replace everything with "alleg.lib"</li><br><br>
+<li>Select "Win32 Debug" in the "Settings For" drop down</li>
+<li>Under the "Code Generation" in the "C/C++" tab, choose "Debug Multithreaded DLL"</li>
+<li>Under the "Object/library modules" in the "Link" tab, replace everything with "alld.lib"</li><br><br>
+<li>Select "Win32 Profile" in the "Settings For" drop down</li>
+<li>Under the "Code Generation" in the "C/C++" tab, choose "Multithreaded DLL"</li>
+<li>Under the "Object/library modules" in the "Link" tab, replace everything with "allp.lib"</li>
+<li>Checkmark the "Enable Profiling" in the "Link" tab</li>
+</ol>
+
+<h4>2. Statically Linking</h4>
+
+<p>(Note: If you have chosen to configure both dynamic and static links, make sure to select the Static configurations
+in the steps below.)</p>
+
+<ol>
+<li>Click on "Projects / Settings"</li>
+<li>Make sure that the project name (the first item) is selected on the ListView on the left hand side</li><br><br>
+<li>Select "Win32 Release" in the "Settings For" drop down</li>
+<li>Under the "Code Generation" in the "C/C++" tab, choose "Multithreaded DLL"</li>
+<li>Under the "Object/library modules" in the "Link" tab, replace everything with "alleg_s.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib ole32.lib dinput.lib ddraw.lib dxguid.lib winmm.lib dsound.lib"</li><br><br>
+<li>Select "Win32 Debug" in the "Settings For" drop down</li>
+<li>Under the "Code Generation" in the "C/C++" tab, choose "Debug Multithreaded DLL"</li>
+<li>Under the "Object/library modules" in the "Link" tab, replace everything with "alld_s.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib ole32.lib dinput.lib ddraw.lib dxguid.lib winmm.lib dsound.lib"</li><br><br>
+<li>Select "Win32 Profile" in the "Settings For" drop down</li>
+<li>Under the "Code Generation" in the "C/C++" tab, choose "Multithreaded DLL"</li>
+<li>Under the "Object/library modules" in the "Link" tab, replace everything with "allp_s.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib ole32.lib dinput.lib ddraw.lib dxguid.lib winmm.lib dsound.lib"</li>
+<li>Checkmark the "Enable Profiling" in the "Link" tab</li>
+</ol>
+
+<p>
+The workspace is entirely configured now! Skip down to the section entitled "Compiling Source Code" to get your
+first program compiled.
+
+<h3>B. Configuring a Console Application</h3>
+<p>
+If you just want to use Allegro for a text console, then you can follow the above instructions, except you
+will need to choose "Win32 Console Application" when first creating the project. Also, you will need to define
+"USE_CONSOLE" before you include "allegro.h", as illustrated below.
+</p>
+
+<h2>II. Compiling Source Code</h2>
+
+<p>
+For the sake of simplicity, we will set up a program from one source file that should display the words "Hello World" in a pop up dialog box. 
+</p>
+
+<ol>
+<li>Click on "File" / "New"</li>
+<li>Choose "C / C++ Source File", enter the filename, and press "OK"<br><br></li>
+<li>Enter the following code:
+<pre>
+/* #define ALLEGRO_STATICLINK  */
+/* #define USE_CONSOLE */
+#include "allegro.h"
+
+int main(void)
+{
+  allegro_init();
+  allegro_message("Hello World");
+  return 0;
+}
+END_OF_MAIN();
+</pre>
+(Note: If you are statically linking or using a Win32 Console Application, then uncomment the associated lines.)<br><br>
+</li>
+<li>Compile and Run the program. (CTRL-F5)</li>
+</ol>
+
+To select which configuration you want to build, simply choose "Build" / "Set Active Configuration" and choose which one to use. Generally,
+you will code your project with the Debugging version, test for performance with the Profiling version, and the release with the Release (Optimize)
+version.
+
+
+
+</body>
+
+</html>
